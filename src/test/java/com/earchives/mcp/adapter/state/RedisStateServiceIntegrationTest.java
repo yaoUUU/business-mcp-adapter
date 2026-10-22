@@ -1,0 +1,11 @@
+package com.earchives.mcp.adapter.state;
+import com.earchives.mcp.adapter.config.AdapterSecurityProperties;import com.earchives.mcp.adapter.security.CryptoService;import com.earchives.mcp.adapter.service.DownstreamSession;import com.fasterxml.jackson.databind.ObjectMapper;import org.junit.jupiter.api.*;import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;import org.springframework.data.redis.core.StringRedisTemplate;import org.testcontainers.containers.GenericContainer;import org.testcontainers.junit.jupiter.Container;import org.testcontainers.junit.jupiter.Testcontainers;import org.testcontainers.utility.DockerImageName;import java.util.Base64;import static org.junit.jupiter.api.Assertions.*;
+/** 使用真实 Redis 7 验证会话持久化、密文存储和个人微信 Key 隔离；无 Docker 时自动跳过。 */
+@Testcontainers(disabledWithoutDocker=true) class RedisStateServiceIntegrationTest{
+ @Container static final GenericContainer<?> REDIS=new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379);
+ private LettuceConnectionFactory connection;private RedisStateService state;
+ @BeforeEach void setUp(){connection=new LettuceConnectionFactory(REDIS.getHost(),REDIS.getMappedPort(6379));connection.afterPropertiesSet();StringRedisTemplate template=new StringRedisTemplate(connection);template.afterPropertiesSet();AdapterSecurityProperties p=new AdapterSecurityProperties();p.getSecurity().setDataEncryptionKey(Base64.getEncoder().encodeToString(new byte[32]));CryptoService crypto=new CryptoService(p);crypto.validateKey();state=new RedisStateService(template,new ObjectMapper(),crypto,p);}
+ @AfterEach void close(){connection.destroy();}
+ /** 相同 MCP Token 下 A、B 两个微信主体保存的会话必须分别读回且互不覆盖。 */
+ @Test void sessionsAreIsolatedByWechatPrincipalHash(){long expiry=System.currentTimeMillis()+60000;state.saveSession("principal-A",new DownstreamSession("token-A","client",1L,"a","A","13700000001","000000",expiry));state.saveSession("principal-B",new DownstreamSession("token-B","client",2L,"b","B","13700000002","000000",expiry));assertEquals(1L,state.loadSession("principal-A").userId());assertEquals(2L,state.loadSession("principal-B").userId());assertNull(state.loadSession("principal-C"));}
+}

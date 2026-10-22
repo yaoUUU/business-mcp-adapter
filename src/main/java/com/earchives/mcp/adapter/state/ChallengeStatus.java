@@ -1,0 +1,3 @@
+package com.earchives.mcp.adapter.state;
+/** 个人静默授权工作流的持久化状态；顺序不能用于业务判断，转换由服务显式控制。 */
+public enum ChallengeStatus { PREPARING, SMS_SENT, SMS_VERIFIED, APPLICATION_UNKNOWN, APPLICATION_CREATED, APPROVAL_PENDING, APPROVED, VERIFIED, EXPIRED, LOCKED, RETRYABLE_FAILURE, APPROVAL_UNKNOWN, VERIFY_PENDING, FAILED }

@@ -1,0 +1,97 @@
+server:
+  port: ${BUSINESS_MCP_PORT:18081}
+
+spring:
+  config:
+    import:
+      # IDEA 直接启动时会优先读取 adapter 目录下的本地配置。
+      # 同时兼容 working directory 设置为项目根目录或 business-mcp-adapter 模块目录。
+      - optional:file:./business-mcp-adapter/application-local.yml
+      - optional:file:./application-local.yml
+  application:
+    name: business-mcp-adapter
+  data:
+    redis:
+      host: ${BUSINESS_MCP_REDIS_HOST:127.0.0.1}
+      port: ${BUSINESS_MCP_REDIS_PORT:6379}
+      database: ${BUSINESS_MCP_REDIS_DATABASE:0}
+      password: ${BUSINESS_MCP_REDIS_PASSWORD:}
+      timeout: ${BUSINESS_MCP_REDIS_TIMEOUT:3s}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+business:
+  mcp:
+    server-name: business-mcp-adapter
+    server-version: 0.1.0
+    protocol-version: 2025-06-18
+    instructions: This MCP server only exposes personal CA silent-sign authorization tools.
+    downstream:
+      base-url: ${BUSINESS_API_BASE_URL:http://localhost:8080}
+      auth-token: ${BUSINESS_API_TOKEN:}
+      client-id: ${BUSINESS_API_CLIENT_ID:}
+      login-path: ${BUSINESS_API_LOGIN_PATH:/auth/login}
+      user-info-path: ${BUSINESS_API_USER_INFO_PATH:/system/user/getInfo}
+      login-client-id: ${BUSINESS_API_LOGIN_CLIENT_ID:e5cd7e4891bf95d1d19206ce24a7b32e}
+      login-grant-type: ${BUSINESS_API_LOGIN_GRANT_TYPE:password}
+      login-tenant-id: ${BUSINESS_API_LOGIN_TENANT_ID:000000}
+      login-cache-ttl: 25m
+      connect-timeout: 3s
+      read-timeout: 10s
+    rate-limit:
+      window: 1m
+      max-requests: ${BUSINESS_MCP_MAX_REQUESTS:60}
+    security:
+      signature-skew: 5m
+      nonce-ttl: 10m
+      data-encryption-key: ${BUSINESS_MCP_DATA_KEY:}
+    session:
+      ttl: 25m
+    challenge:
+      ttl: 5m
+      start-cooldown: 60s
+      max-code-attempts: 5
+      operation-retention: 24h
+      workflow-lock-ttl: 2m
+    auth:
+      clients:
+        - client-id: ${BUSINESS_MCP_CLIENT_ID:openclaw-wechat}
+          token: ${BUSINESS_MCP_TOKEN:dev-token-change-me}
+          channel-signing-secret: ${BUSINESS_MCP_CHANNEL_SECRET:}
+          environment: ${BUSINESS_MCP_ENV:local}
+          tools:
+            - ca_psn_silent_auth_login
+            - ca_psn_silent_auth_start
+            - ca_psn_silent_auth_finish
+            - ca_psn_silent_auth_status
+            - ca_psn_silent_auth_logout
+    tools:
+      psn-silent-auth:
+        # 第一步：姓名、手机号、身份证号三要素校验，并向手机号发送短信验证码。
+        telecom3-factors-path: /ca/local/account/psn/telecom3Factors
+        telecom3-factors-method: POST
+        # 第二步：校验用户收到的短信验证码。
+        sms-verify-path: /ca/local/account/psn/smsVerify
+        sms-verify-method: POST
+        # 第三步：在原系统创建个人静默签章授权申请记录。
+        psn-auth-path: /ca/local/auth/psn/auth
+        psn-auth-method: POST
+        # 第四步：批准授权申请，完成静默签章授权更新。
+        psn-auth-approve-path: /ca/local/auth/psn/auth/approve
+        psn-auth-approve-method: POST
+        # 查询接口：用于确认账户、授权状态和授权记录。
+        psn-auth-list-path: /ca/local/auth/psn/auth
+        psn-auth-list-method: GET
+        psn-auth-latest-path: /ca/local/auth/psn/auth/latest
+        psn-auth-latest-method: GET
+        psn-authed-path: /ca/local/auth/psn/authed
+        psn-authed-method: GET
+        psn-account-status-path: /ca/local/account/psn/status
+        psn-account-status-method: GET
+
+logging:
+  level:
+    com.earchives.mcp.adapter: info

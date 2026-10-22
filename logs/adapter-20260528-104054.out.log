@@ -1,0 +1,29 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.6)
+
+2026-05-28T10:40:56.193+08:00  INFO 24772 --- [business-mcp-adapter] [           main] c.e.m.a.BusinessMcpAdapterApplication    : Starting BusinessMcpAdapterApplication using Java 17.0.3 with PID 24772 (D:\projects\ea\earchives-platform\business-mcp-adapter\target\business-mcp-adapter.jar started by 23223 in D:\projects\ea\earchives-platform\business-mcp-adapter)
+2026-05-28T10:40:56.197+08:00  INFO 24772 --- [business-mcp-adapter] [           main] c.e.m.a.BusinessMcpAdapterApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-05-28T10:40:58.123+08:00 ERROR 24772 --- [business-mcp-adapter] [           main] o.a.catalina.core.AprLifecycleListener   : An incompatible version [1.2.33] of the Apache Tomcat Native library is installed, while Tomcat requires version [1.2.34]
+2026-05-28T10:40:59.087+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 18081 (http)
+2026-05-28T10:40:59.125+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-28T10:40:59.127+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2026-05-28T10:40:59.225+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-28T10:40:59.231+08:00  INFO 24772 --- [business-mcp-adapter] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2944 ms
+2026-05-28T10:41:01.116+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-28T10:41:01.208+08:00  INFO 24772 --- [business-mcp-adapter] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 18081 (http) with context path '/'
+2026-05-28T10:41:01.235+08:00  INFO 24772 --- [business-mcp-adapter] [           main] c.e.m.a.BusinessMcpAdapterApplication    : Started BusinessMcpAdapterApplication in 5.989 seconds (process running for 6.891)
+2026-05-28T10:41:20.566+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-28T10:41:20.568+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-28T10:41:20.572+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-28T10:41:33.301+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-4] mcp-audit                                : requestId=req-20260528-024133-7986 environment=local tokenHash=f01d2474fd375b4c method=tools/list tool=null ok=true errorCode=null costMs=7
+2026-05-28T10:42:37.888+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-2] mcp-audit                                : requestId=req-20260528-024237-5245 environment=local tokenHash=f01d2474fd375b4c method=tools/call tool=ca_psn_silent_auth_status ok=false errorCode=DOWNSTREAM_BUSINESS_ERROR costMs=92
+2026-05-28T11:06:54.925+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-8] mcp-audit                                : requestId=req-20260528-030654-1169 environment=local tokenHash=f01d2474fd375b4c method=initialize tool=null ok=true errorCode=null costMs=2
+2026-05-28T11:06:54.942+08:00  INFO 24772 --- [business-mcp-adapter] [io-18081-exec-9] mcp-audit                                : requestId=req-20260528-030654-8236 environment=local tokenHash=f01d2474fd375b4c method=notifications/initialized tool=null ok=false errorCode=null costMs=0
+2026-05-28T11:06:54.956+08:00  INFO 24772 --- [business-mcp-adapter] [o-18081-exec-10] mcp-audit                                : requestId=req-20260528-030654-8045 environment=local tokenHash=f01d2474fd375b4c method=tools/list tool=null ok=true errorCode=null costMs=3
